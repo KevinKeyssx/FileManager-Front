@@ -13,17 +13,20 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^7.0.1",
-		"@sveltejs/kit": "^2.57.0",
+		"@sveltejs/kit": "^2.59.0",
 		"@sveltejs/vite-plugin-svelte": "^7.0.0",
 		"@tailwindcss/typography": "^0.5.19",
-		"@tailwindcss/vite": "^4.2.2",
-		"svelte": "^5.55.2",
-		"svelte-check": "^4.4.6",
-		"tailwindcss": "^4.2.2",
-		"typescript": "^6.0.2",
-		"vite": "^8.0.7"
+		"@tailwindcss/vite": "^4.2.4",
+		"svelte": "^5.55.5",
+		"svelte-check": "^4.4.7",
+		"tailwindcss": "^4.2.4",
+		"typescript": "^6.0.3",
+		"vite": "^8.0.10"
 	},
 	"dependencies": {
-		"bits-ui": "^2.18.0"
+		"@tanstack/svelte-query": "^6.1.26",
+		"@tanstack/svelte-query-devtools": "^6.1.26",
+		"bits-ui": "^2.18.0",
+		"zod": "^4.4.2"
 	}
 }
