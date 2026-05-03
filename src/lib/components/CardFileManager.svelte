@@ -1,23 +1,32 @@
 <script lang="ts">
 	import { createMutation, useQueryClient } from "@tanstack/svelte-query";
-	import type { CloudinaryResource, FileManagerResponse } from "$lib/types";
-	import { formatBytes } from "$lib/utils";
 
-	let { resource, onCopy } = $props<{ 
+    import { toast } from "svelte-sonner";
+
+    import type {
+        CloudinaryResource,
+        FileManagerResponse
+    }                       from "$lib/types";
+	import { formatBytes }  from "$lib/utils";
+
+
+    let { resource, onCopy } = $props<{ 
 		resource : CloudinaryResource;
 		onCopy   : ( text: string ) => void;
 	}>( );
 
-	const queryClient = useQueryClient( );
 
-	const deleteMutation = createMutation( ( ) => ( {
+    const queryClient = useQueryClient( );
+
+
+    const deleteMutation = createMutation( ( ) => ( {
 		mutationFn : async ( ) => {
 			const res = await fetch( `/api/filemanager/delete?public_id=${ encodeURIComponent( resource.public_id ) }`, {
 				method : "DELETE"
 			} );
 
 			if ( !res.ok ) {
-				const errorData = await res.json( );
+				const errorData = await res.json();
 				throw new Error( errorData.error || "Error al eliminar archivo" );
 			}
 
@@ -32,26 +41,40 @@
 					total_count : ( old.total_count || 1 ) - 1,
 					resources   : old.resources.filter( ( r ) => r.public_id !== resource.public_id )
 				};
-			} );
-		}
-	} ) );
+			});
 
-	const handleDownload = ( ) => {
+            toast.success( 'Archivo eliminado correctamente' );
+		},
+        onError: ( error ) => {
+            console.error( "Error al eliminar el archivo:", error );
+            toast.error( `Error al eliminar el archivo` );
+        }
+	}));
+
+
+    const handleDownload = () => {
 		try {
-			// Usamos fl_attachment de Cloudinary para forzar la descarga a nivel de servidor
 			const downloadUrl = resource.secure_url.replace( "/upload/", "/upload/fl_attachment/" );
-			
+
 			const a = document.createElement( "a" );
-			a.href = downloadUrl;
+
+            a.href = downloadUrl;
 			a.download = `${ resource.public_id.split( "/" ).pop( ) }.${ resource.format }`;
-			document.body.appendChild( a );
-			a.click( );
-			document.body.removeChild( a );
+
+            document.body.appendChild( a );
+
+            a.click( );
+
+            document.body.removeChild( a );
+
+            toast.success( 'Archivo descargado correctamente' );
 		} catch ( error ) {
 			console.error( "Error al descargar el archivo:", error );
+            toast.error( 'Error al descargar el archivo' );
 		}
 	};
 </script>
+
 
 <div class="bg-slate-900/40 border border-slate-700/50 rounded-2xl overflow-hidden backdrop-blur-md hover:border-cyan-500/30 transition-all shadow-xl group flex flex-col">
 	<div class="aspect-video relative overflow-hidden bg-slate-950">
