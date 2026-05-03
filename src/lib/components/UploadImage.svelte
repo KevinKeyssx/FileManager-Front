@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { createMutation, useQueryClient } from "@tanstack/svelte-query";
-	
+
+    import { toast } from "svelte-sonner";
+
 	import {
         normalizeFolder,
         clampQuality
@@ -71,7 +73,7 @@
 				throw new Error( errorData.error || "Error al subir archivo" );
 			}
 
-			return res.json( );
+			return await res.json( );
 		},
 		onSuccess : ( data ) => {
 			// Inyectar manualmente el nuevo recurso en la caché para feedback instantáneo
@@ -82,12 +84,17 @@
 					total_count : ( old.total_count || 0 ) + 1,
 					resources   : [ data, ...( old.resources || [ ] ) ]
 				};
-			} );
-			
+			});
+
 			open         = false;
 			selectedFile = null;
+			toast.success( 'Archivo subido correctamente' );
+		},
+		onError : ( error ) => {
+			console.error( 'Error al subir el archivo:', error );
+			toast.error( 'Error al subir el archivo' );
 		}
-	} ) );
+	}));
 
 
 	// Sincronizar folder inicial cuando cambia el prop o se abre el dialogo
@@ -204,50 +211,54 @@
 			onchange={ updateQuality }
 		/>
 
-		<div class="bg-slate-900/40 p-6 rounded-2xl shadow-inner border border-slate-700/50 space-y-4">
-			<div class="w-full flex justify-between items-center">
+		<div class="bg-slate-900/40 p-5 md:p-6 rounded-2xl shadow-inner border border-slate-700/50 space-y-4">
+			<div class="w-full flex flex-col sm:flex-row justify-between sm:items-center gap-3">
 				<p class="text-sm font-medium text-cyan-200">Dimensiones</p>
 
-                <SwitchInput
-					id="useOriginal"
-					label="Dimensiones originales"
-					checked={ form.useOriginal }
-					onchange={ updateUseOriginal }
+				<SwitchInput
+					id       = "useOriginal"
+					label    = "Dimensiones originales"
+					checked  = { form.useOriginal }
+					onchange = { updateUseOriginal }
 				/>
 			</div>
 
-			<div class="flex gap-4 items-center w-full">
-				<div class="flex gap-3 w-full opacity-100 transition-opacity" class:opacity-40={ form.useOriginal }>
-					<NumberInput
-						id="width"
-						label="Ancho"
-						value={ form.width }
-						min={ 1 }
-						max={ 10000 }
-						step={ 1 }
-						onchange={ updateWidth }
-						disabled={ form.useOriginal }
-					/>
+			<div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center w-full">
+				<div class="flex gap-4 w-full opacity-100 transition-opacity" class:opacity-40={ form.useOriginal }>
+					<div class="flex-1">
+						<NumberInput
+							id       = "width"
+							label    = "Ancho"
+							value    = { form.width }
+							min      = { 1 }
+							max      = { 10000 }
+							step     = { 1 }
+							onchange = { updateWidth }
+							disabled = { form.useOriginal }
+						/>
+					</div>
 
-                    <NumberInput
-						id="height"
-						label="Alto"
-						value={ form.height }
-						min={ 1 }
-						max={ 10000 }
-						step={ 1 }
-						onchange={ updateHeight }
-						disabled={ form.useOriginal }
-					/>
+					<div class="flex-1">
+						<NumberInput
+							id       = "height"
+							label    = "Alto"
+							value    = { form.height }
+							min      = { 1 }
+							max      = { 10000 }
+							step     = { 1 }
+							onchange = { updateHeight }
+							disabled = { form.useOriginal }
+						/>
+					</div>
 				</div>
 
-                <div class="shrink-0" class:opacity-40={ form.useOriginal }>
+				<div class="shrink-0" class:opacity-40={ form.useOriginal }>
 					<SwitchInput
-						id="keepDims"
-						label="Mantener"
-						checked={ form.keepDims }
-						onchange={ updateKeepDims }
-						disabled={ form.useOriginal }
+						id       = "keepDims"
+						label    = "Mantener"
+						checked  = { form.keepDims }
+						onchange = { updateKeepDims }
+						disabled = { form.useOriginal }
 					/>
 				</div>
 			</div>
