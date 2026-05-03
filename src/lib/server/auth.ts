@@ -6,7 +6,10 @@ export const auth = betterAuth({
         google : {
             clientId     : ENVS.GOOGLE_CLIENT_ID,
             clientSecret : ENVS.GOOGLE_CLIENT_SECRET,
-            mapUser: async (user: any, _account: any) => {
+            mapUser : async ( user : any, _account : any ) => {
+                if ( user.email !== ENVS.ADMIN_EMAIL ) {
+                    throw new Error( "Unauthorized: Only admin can login" );
+                }
                 return user;
             }
         }
