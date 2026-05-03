@@ -28,6 +28,7 @@
 		"@tanstack/svelte-query-devtools": "^6.1.26",
 		"better-auth": "^1.6.9",
 		"bits-ui": "^2.18.0",
+		"svelte-sonner": "^1.1.1",
 		"zod": "^4.4.2"
 	}
 }
