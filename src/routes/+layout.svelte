@@ -4,7 +4,6 @@
 
     import './layout.css';
 
-    import favicon  from '$lib/assets/favicon.svg';
 	import SEO      from '$lib/components/shared/SEO.svelte';
 	import Header   from '$lib/components/home/Header.svelte';
 	import Footer   from '$lib/components/home/Footer.svelte';
@@ -19,7 +18,7 @@
 />
 
 <svelte:head>
-	<link rel="icon" href={ favicon } />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </svelte:head>
 
 <QueryClientProvider client={ data.queryClient }>
