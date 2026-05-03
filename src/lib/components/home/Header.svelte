@@ -1,8 +1,13 @@
 <script lang="ts">
-    import { signIn, signOut, useSession } from "$lib/auth-client";
+    import { goto } from "$app/navigation";
+
     import { DropdownMenu } from "bits-ui";
 
+    import { signIn, signOut, useSession } from "$lib/auth-client";
+
+
     const session = useSession( );
+
 
     async function loginWithGoogle( ) {
         await signIn.social({
@@ -11,6 +16,7 @@
         });
     }
 </script>
+
 
 <header class="sticky top-0 z-50 w-full border-b border-slate-700/50 bg-slate-950/60 backdrop-blur-xl">
     <div class="max-w-[1400px] mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
@@ -51,7 +57,7 @@
                         <DropdownMenu.Content class="z-50 min-w-[200px] mt-2 p-2 bg-slate-900/90 border border-slate-700/50 rounded-2xl backdrop-blur-xl shadow-2xl animate-in fade-in zoom-in duration-200">
                             <DropdownMenu.Group>
                                 <DropdownMenu.GroupHeading class="px-3 py-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">Configuración</DropdownMenu.GroupHeading>
-                                
+
                                 <DropdownMenu.Item class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-cyan-500/10 hover:text-cyan-300 cursor-pointer transition-all outline-hidden">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                                     <span>Dashboard</span>
@@ -61,7 +67,10 @@
                             <DropdownMenu.Separator class="h-px bg-slate-700/50 my-1 mx-2" />
 
                             <DropdownMenu.Item 
-                                onclick={ ( ) => signOut( ) }
+                                onclick={ async ( ) => {
+                                    await signOut( );
+                                    goto( "/" );
+                                } }
                                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 cursor-pointer transition-all outline-hidden"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
