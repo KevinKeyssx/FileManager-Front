@@ -101,11 +101,11 @@
 		</div>
 
         <button
-            class    = "absolute bottom-2 right-2 p-2 rounded-lg bg-red-500/50 text-red-100/70 hover:text-red-400 hover:bg-red-500/10 transition-all border border-red-700/50 hover:border-red-500/30 disabled:opacity-50 opacity-0 group-hover:opacity-100"
+            class      = "absolute bottom-2 right-2 p-2 rounded-lg bg-red-500/50 text-red-100/70 hover:text-red-400 hover:bg-red-500/10 transition-all border border-red-700/50 hover:border-red-500/30 disabled:opacity-50 opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
             // onclick  = { ( ) => deleteMutation.mutate( ) }
             ondblclick = { ( ) => deleteMutation.mutate( ) }
-            disabled = { deleteMutation.isPending }
-            title    = "Eliminar archivo"
+            disabled   = { deleteMutation.isPending }
+            title      = "Eliminar archivo"
         >
             {#if deleteMutation.isPending}
                 <div class="w-3.5 h-3.5 border-2 border-red-400/20 border-t-red-400 rounded-full animate-spin"></div>
