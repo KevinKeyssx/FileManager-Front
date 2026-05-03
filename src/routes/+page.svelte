@@ -1,190 +1,125 @@
 <script lang="ts">
-	import { createQuery } from "@tanstack/svelte-query";
-	import UploadImage from "$lib/components/UploadImage.svelte";
-	import TextInput from "$lib/components/TextInput.svelte";
-	import SEO from "$lib/components/SEO.svelte";
-	import type { FileManagerResponse } from "$lib/types";
-
-	let isUploadOpen   = $state( false );
-	let searchQuery    = $state( "" );
-	let folderToSearch = $state( "" );
-
-	const filesQuery = createQuery<FileManagerResponse, Error>( ( ) => ( {
-		queryKey : [ "files", folderToSearch ],
-		queryFn  : async ( ) => {
-			const res = await fetch( `/api/filemanager/get-all?folder=${ encodeURIComponent( folderToSearch ) }` );
-			if ( !res.ok ) throw new Error( "Error al obtener archivos" );
-			return res.json( ) as Promise<FileManagerResponse>;
-		},
-		enabled : !!folderToSearch
-	} ) );
-
-	function updateSearch( v: string ) {
-		searchQuery = v;
-	}
-
-	function handleSearch( ) {
-		if ( !searchQuery.trim( ) ) return;
-		folderToSearch = searchQuery.trim( );
-	}
-
-	async function copyToClipboard( text: string ) {
-		try {
-			await navigator.clipboard.writeText( text );
-		} catch ( err ) {
-			console.error( "Error al copiar: ", err );
-		}
-	}
-
-	const normalizedDisplay = $derived( searchQuery.trim( ).replace( /\s+/g, "|" ) );
+	import SEO from "$lib/components/shared/SEO.svelte";
 </script>
 
 <SEO
-	title="FileManager - Sube y optimiza tus imágenes"
-	description="La plataforma más rápida para subir y transformar tus archivos e imágenes con configuraciones personalizadas."
+	title="FileManager - Tu centro de medios en la nube"
+	description="Sube, organiza, optimiza y transforma tus imágenes y videos al instante. Una experiencia diseñada para la velocidad y la belleza."
 />
 
-<main class="max-w-6xl mx-auto p-8 my-auto space-y-8">
-	<section class="bg-neon-glass rounded-2xl shadow-2xl border-2 border-slate-700/50 p-8 space-y-6">
-		<div class="flex justify-between items-center">
-			<h1 class="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-300 to-purple-400 drop-shadow-sm">
-				UploadFiles
-			</h1>
-
-			<button
-				class="px-6 py-2.5 rounded-xl bg-cyan-500/20 border border-cyan-500/50 text-cyan-200 text-sm font-semibold hover:bg-cyan-500/30 transition-all shadow-lg hover:shadow-cyan-500/10 active:scale-95"
-				onclick={ ( ) => isUploadOpen = true }
-			>
-				Subir Archivo
-			</button>
+<div class="relative overflow-hidden w-full">
+	<!-- Elementos de fondo decorativos -->
+	<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[50%] rounded-full bg-cyan-600/20 blur-[120px] pointer-events-none"></div>
+	<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[50%] rounded-full bg-purple-600/20 blur-[120px] pointer-events-none"></div>
+	
+	<!-- Hero Section -->
+	<section class="relative max-w-[1400px] mx-auto px-4 md:px-8 pt-32 pb-24 md:pt-48 md:pb-32 flex flex-col items-center text-center">
+		<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50 backdrop-blur-md mb-8 animate-fade-in-up">
+			<span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+			<span class="text-xs font-semibold text-cyan-200 tracking-wider uppercase">FileManager v2.0 Disponible</span>
 		</div>
 
-		<hr class="border-slate-700/50" />
+		<h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 leading-[1.1] animate-fade-in-up animation-delay-100">
+			Gestiona tus <br class="hidden md:block"/>
+			<span class="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 via-indigo-400 to-purple-400 drop-shadow-lg">
+				recursos sin límites.
+			</span>
+		</h1>
 
-		<div class="space-y-2">
-			<div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-				<div class="md:col-span-3">
-					<TextInput
-						id="search"
-						label="Buscar Folder"
-						value={ searchQuery }
-						placeholder="Ejemplo: uai mailstudio"
-						onchange={ updateSearch }
-						type="search"
-						onkeydown={ ( e: KeyboardEvent ) => e.key === "Enter" && handleSearch( ) }
-					/>
-				</div>
+		<p class="text-lg md:text-xl text-cyan-100/60 max-w-2xl mb-12 animate-fade-in-up animation-delay-200 leading-relaxed">
+			La plataforma definitiva para organizar, optimizar y transformar tus imágenes en tiempo real. Interfaz moderna, subidas ultrarrápidas y control total sobre tus medios.
+		</p>
 
-				<button
-					class="w-full py-2.5 rounded-xl bg-linear-to-r from-cyan-600 to-purple-600 text-white font-bold shadow-lg hover:shadow-cyan-500/20 transition-all active:scale-95 disabled:opacity-50"
-					onclick={ handleSearch }
-					disabled={ !searchQuery.trim( ) || filesQuery.isFetching }
-				>
-					{ filesQuery.isFetching ? "Buscando..." : "Buscar" }
-				</button>
-			</div>
-			{#if searchQuery.trim( )}
-				<p class="text-[10px] text-cyan-400/60 font-mono ml-1">
-					Formato: <span class="text-cyan-300">{ normalizedDisplay }</span>
-				</p>
-			{/if}
+		<div class="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-300">
+			<a 
+				href="/dashboard" 
+				class="px-8 py-4 rounded-2xl bg-linear-to-r from-cyan-600 to-purple-600 text-white font-bold text-lg shadow-[0_0_40px_-10px_rgba(6,182,212,0.5)] hover:shadow-[0_0_60px_-15px_rgba(6,182,212,0.7)] transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
+			>
+				Ir al Dashboard
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+			</a>
+			
+			<a 
+				href="https://github.com/KevinKeyssx/FileManager-Front" 
+				target="_blank"
+				class="px-8 py-4 rounded-2xl bg-slate-900/50 border border-slate-700 hover:border-cyan-500/50 hover:bg-slate-800 text-cyan-100 font-bold text-lg transition-all flex items-center justify-center gap-3 backdrop-blur-md"
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+				Ver en GitHub
+			</a>
 		</div>
 	</section>
 
-	{#if filesQuery.isLoading && filesQuery.isFetching}
-		<div class="flex flex-col items-center py-20 space-y-4">
-			<div class="w-12 h-12 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin"></div>
-			<p class="text-cyan-200/60 animate-pulse">Obteniendo recursos...</p>
+	<!-- Features Section -->
+	<section class="max-w-[1400px] mx-auto px-4 md:px-8 py-24 border-t border-slate-800/50 relative z-10">
+		<div class="text-center mb-16">
+			<h2 class="text-3xl md:text-5xl font-bold mb-6 text-white">¿Cómo funciona?</h2>
+			<p class="text-cyan-100/50 max-w-2xl mx-auto">Todo lo que necesitas para gestionar tus archivos, integrado en una sola plataforma rápida y fácil de usar.</p>
 		</div>
-	{:else if filesQuery.isError}
-		<div class="p-8 bg-red-500/10 border border-red-500/50 rounded-2xl text-center">
-			<p class="text-red-400">Error: { filesQuery.error.message }</p>
-		</div>
-	{:else if filesQuery.data && filesQuery.data.resources.length > 0}
-		{@const data = filesQuery.data}
-		<div class="space-y-4">
-			<div class="flex justify-between items-center">
-				<h2 class="text-xl font-semibold text-cyan-100">Resultados ({ data.total_count })</h2>
-				<p class="text-xs text-cyan-100/40">Tiempo: { data.time }ms</p>
+
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+			<!-- Feature 1 -->
+			<div class="bg-slate-900/40 border border-slate-700/50 rounded-3xl p-8 backdrop-blur-md hover:border-cyan-500/50 hover:bg-slate-800/60 transition-all duration-300 group">
+				<div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 group-hover:bg-cyan-500/20">
+					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-400"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+				</div>
+				<h3 class="text-xl font-bold text-white mb-3">1. Sube al instante</h3>
+				<p class="text-cyan-100/60 text-sm leading-relaxed">
+					Arrastra y suelta tus imágenes o videos en nuestra zona de carga optimizada. Soporta múltiples formatos y tamaños grandes sin bloqueos.
+				</p>
 			</div>
-			
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{#each data.resources as resource}
-					<div class="bg-slate-900/40 border border-slate-700/50 rounded-2xl overflow-hidden backdrop-blur-md hover:border-cyan-500/30 transition-all shadow-xl group">
-						<div class="aspect-video relative overflow-hidden bg-slate-950">
-							<img src={ resource.secure_url } alt={ resource.public_id } class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-							<div class="absolute top-2 right-2 px-2 py-1 bg-slate-950/80 rounded-lg text-[10px] font-bold text-cyan-400 uppercase tracking-wider border border-cyan-500/20">
-								{ resource.format }
-							</div>
-						</div>
-						<div class="p-4 space-y-3">
-							<div class="flex justify-between items-center gap-2">
-								<h3 class="text-sm font-semibold text-white truncate flex-1" title={ resource.public_id }>
-									{ resource.public_id.split( "/" ).pop( ) }
-								</h3>
 
-                                <span
-                                    class="w-2.5 h-2.5 rounded-full border border-white/10 shadow-sm"
-                                    class:bg-cyan-500={ resource.status === "active" }
-                                    class:bg-red-500={ resource.status === "inactive" }
-                                    title={ resource.status }
-                                ></span>
-							</div>
+			<!-- Feature 2 -->
+			<div class="bg-slate-900/40 border border-slate-700/50 rounded-3xl p-8 backdrop-blur-md hover:border-purple-500/50 hover:bg-slate-800/60 transition-all duration-300 group">
+				<div class="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 group-hover:bg-purple-500/20">
+					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-400"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>
+				</div>
+				<h3 class="text-xl font-bold text-white mb-3">2. Transforma sobre la marcha</h3>
+				<p class="text-cyan-100/60 text-sm leading-relaxed">
+					Aplica recortes, redimensionamiento, conversiones de formato (AVIF, WEBP) y reduce la calidad antes de guardar para ahorrar espacio.
+				</p>
+			</div>
 
-							<div class="grid grid-cols-3 gap-y-2 gap-x-1 text-[ 11px ] text-cyan-100/60">
-								<div class="flex items-center gap-1.5 text-xs">
-									<span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
-									{ resource.width } x { resource.height }
-								</div>
-
-                                <div class="flex items-center gap-1.5 text-xs">
-									<span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>
-									{ ( resource.bytes / 1024 ).toFixed( 2 ) } KB
-								</div>
-
-                                <div class="flex items-center gap-1.5 text-xs">
-									<span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
-									{ resource.resource_type }
-								</div>
-							</div>
-
-                            <div class="flex gap-2 items-center">
-                                <a 
-                                    href={ resource.secure_url } 
-                                    target="_blank" 
-                                    class="block w-full py-2 text-center rounded-xl bg-slate-800/50 hover:bg-cyan-500/20 text-cyan-200 text-xs font-semibold transition-all border border-slate-700 hover:border-cyan-500/50"
-                                >
-                                    Ver Imagen
-                                </a>
-
-                                <button
-                                    class="p-2 rounded-lg bg-slate-800/50 text-cyan-400/70 hover:text-cyan-400 hover:bg-slate-800 transition-all border border-slate-700/50"
-                                    onclick={ ( ) => copyToClipboard( resource.secure_url ) }
-                                    title="Copiar URL segura"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-                                </button>
-                            </div>
-						</div>
-					</div>
-				{/each}
+			<!-- Feature 3 -->
+			<div class="bg-slate-900/40 border border-slate-700/50 rounded-3xl p-8 backdrop-blur-md hover:border-indigo-500/50 hover:bg-slate-800/60 transition-all duration-300 group">
+				<div class="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 group-hover:bg-indigo-500/20">
+					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+				</div>
+				<h3 class="text-xl font-bold text-white mb-3">3. Navegación jerárquica</h3>
+				<p class="text-cyan-100/60 text-sm leading-relaxed">
+					Organiza tus archivos en carpetas infinitas. Nuestro explorador con diseño de árbol te permite encontrar lo que buscas en milisegundos.
+				</p>
 			</div>
 		</div>
-	{:else if folderToSearch}
-		<div class="py-20 text-center space-y-4 bg-slate-900/20 rounded-2xl border border-dashed border-slate-700/50">
-			<p class="text-cyan-100/60 text-lg">No se encontraron archivos en este folder.</p>
-			<p class="text-sm text-cyan-200/40">Intenta buscar con otro nombre o verifica el formato.</p>
-		</div>
-	{:else}
-		<div class="py-20 text-center space-y-4">
-			<p class="text-cyan-100/60 text-lg">
-				Bienvenido al sistema de carga de imágenes optimizado.
-			</p>
-			<p class="text-sm text-cyan-200/40">
-				Ingresa un nombre de folder arriba para explorar los archivos existentes.
-			</p>
-		</div>
-	{/if}
-</main>
+	</section>
+</div>
 
-<UploadImage bind:open={ isUploadOpen } />
+<style>
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.animate-fade-in-up {
+		animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+		opacity: 0;
+	}
+
+	.animation-delay-100 {
+		animation-delay: 100ms;
+	}
+
+	.animation-delay-200 {
+		animation-delay: 200ms;
+	}
+
+	.animation-delay-300 {
+		animation-delay: 300ms;
+	}
+</style>
