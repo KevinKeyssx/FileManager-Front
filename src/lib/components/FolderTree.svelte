@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createQuery } from "@tanstack/svelte-query";
+	import { useFoldersQuery } from "$lib/queries/folders";
 	import FolderNode from "./FolderNode.svelte";
 
 	let { selectedPath, onSelectFolder } = $props<{ 
@@ -7,14 +7,7 @@
 		onSelectFolder : ( path: string ) => void 
 	}>( );
 
-	const rootFoldersQuery = createQuery<string[], Error>( ( ) => ( {
-		queryKey : [ "folders", "" ],
-		queryFn  : async ( ) => {
-			const res = await fetch( `/api/filemanager/get-folders?folder_name=` );
-			if ( !res.ok ) throw new Error( "Error al obtener carpetas" );
-			return res.json( ) as Promise<string[]>;
-		}
-	} ) );
+	const rootFoldersQuery = useFoldersQuery( ( ) => "" );
 </script>
 
 {#if rootFoldersQuery.isLoading}
