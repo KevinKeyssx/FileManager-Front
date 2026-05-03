@@ -29,9 +29,9 @@
 			class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
 		/>
 		<Dialog.Content
-			class="fixed inset-0 z-50 flex items-center justify-center p-4 focus:outline-none"
+			class="fixed inset-0 z-50 flex items-center justify-center p-2 md:p-4 focus:outline-none"
 		>
-			<div class="neon-glass w-full max-w-2xl rounded-3xl p-8 border-2 border-slate-700/50 shadow-2xl relative">
+			<div class="neon-glass overflow-y-auto custom-scrollbar w-full max-w-2xl max-h-full rounded-3xl p-4 md:p-8 border-2 border-slate-700/50 shadow-2xl relative">
 				{#if title}
 					<Dialog.Title class="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-300 to-purple-400 mb-2">
 						{ title }
