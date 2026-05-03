@@ -35,6 +35,22 @@
 			} );
 		}
 	} ) );
+
+	const handleDownload = ( ) => {
+		try {
+			// Usamos fl_attachment de Cloudinary para forzar la descarga a nivel de servidor
+			const downloadUrl = resource.secure_url.replace( "/upload/", "/upload/fl_attachment/" );
+			
+			const a = document.createElement( "a" );
+			a.href = downloadUrl;
+			a.download = `${ resource.public_id.split( "/" ).pop( ) }.${ resource.format }`;
+			document.body.appendChild( a );
+			a.click( );
+			document.body.removeChild( a );
+		} catch ( error ) {
+			console.error( "Error al descargar el archivo:", error );
+		}
+	};
 </script>
 
 <div class="bg-slate-900/40 border border-slate-700/50 rounded-2xl overflow-hidden backdrop-blur-md hover:border-cyan-500/30 transition-all shadow-xl group flex flex-col">
@@ -115,6 +131,14 @@
 			>
 				Ver { resource.resource_type === "video" ? "Video" : "Imagen" }
 			</a>
+
+			<button
+				class    = "p-2 rounded-lg bg-slate-800/50 text-cyan-400/70 hover:text-cyan-400 hover:bg-slate-800 transition-all border border-slate-700/50"
+				onclick  = { handleDownload }
+				title    = "Descargar archivo"
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+			</button>
 
 			<button
 				class    = "p-2 rounded-lg bg-slate-800/50 text-cyan-400/70 hover:text-cyan-400 hover:bg-slate-800 transition-all border border-slate-700/50"
