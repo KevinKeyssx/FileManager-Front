@@ -3,9 +3,10 @@ export interface ImageFormatOption { value: string; label: string; }
 export interface FormState {
 	folder         : string;
 	format         : string;
-	width          : number;
-	height         : number;
+	width          : number | null;
+	height         : number | null;
 	keepDims       : boolean;
+	useOriginal    : boolean;
 	quality        : number;
 	transformation : string;
 }
